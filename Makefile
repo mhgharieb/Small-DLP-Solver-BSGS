@@ -26,7 +26,9 @@ LIBS_BENCH = -lsecp256k1
 
 # --- Target Binaries ---
 TARGETS = bsgs \
+		  bsgs_zaddU \
 		  bsgs_zaddsub \
+		  bsgs_zaddsubU \
 		  bsgs_zaddc \
           fastecdlp_treemon \
           fastecdlp_parallel \
@@ -46,27 +48,35 @@ all: $(TARGETS)
 bsgs: bsgs_dlp_benchmark_cached.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-# 2. Our complete solver using zaddsub
+# 2. Our complete solver
+bsgs_zaddU: bsgs_dlp_benchmark_cached_zaddU.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
+
+# 3. Our complete solver using zaddsub
 bsgs_zaddsub: bsgs_dlp_benchmark_cached_zaddsub.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-# 3. Our complete solver using zaddc
+# 4. Our complete solver using zaddsub
+bsgs_zaddsubU: bsgs_dlp_benchmark_cached_zaddsubU.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
+
+# 5. Our complete solver using zaddc
 bsgs_zaddc: bsgs_dlp_benchmark_cached_zaddc.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-# 4. FastECDLP faithful (Tang et al.)
+# 6. FastECDLP faithful (Tang et al.)
 fastecdlp_treemon: fastecdlp_treemon.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-# 5. FastECDLP + parallel Phase 1+2
+# 7. FastECDLP + parallel Phase 1+2
 fastecdlp_parallel: fastecdlp_parallel.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-# 6. FastECDLP + Jacobian loop (no T₂)
+# 8. FastECDLP + Jacobian loop (no T₂)
 fastecdlp_jacobian: fastecdlp_jacobian.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-# 7. Field microbenchmark (does not require pthread)
+# 9. Field microbenchmark (does not require pthread)
 bench_field: bench_field.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS) $(LIBS_BENCH)
 
